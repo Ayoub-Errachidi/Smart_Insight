@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Résultat Transformation | Harmony Technology</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+  <div class="container mt-4">
+
+    <!-- Titre principal -->
+    <h1 class="text-center mb-4 text-primary">Résultat de la Transformation du Dataset</h1>
+
+    <!-- Message de succès -->
+    {% if success %}
+      <div class="alert alert-success text-center" role="alert">
+        {{ success }}
+      </div>
+    {% endif %}
+
+    <!-- Message d'erreur -->
+    {% if error %}
+      <div class="alert alert-danger text-center" role="alert">
+        {{ error }}
+      </div>
+    {% endif %}
+
+    <!-- Informations principales -->
+    {% if columns %}
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h4 class="card-title text-secondary">Informations Générales</h4>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><strong>Nombre de lignes :</strong> {{ rows }}</li>
+          <li class="list-group-item"><strong>Nombre de colonnes :</strong> {{ cols }}</li>
+          <li class="list-group-item"><strong>Colonnes :</strong> {{ columns|join:", " }}</li>
+          {% if request.session.target_column %}
+            <li class="list-group-item text-success">
+              <strong>Colonne cible (Target) :</strong> {{ request.session.target_column }}
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Colonnes transformées -->
+    
+
+    <!-- Nouvelles Features (Feature Engineering) -->
+    {% if colonnes_transformees %}
+      {% for col in colonnes_transformees %}
+        {% if "Feature engineering" in col %}
+        <div class="card shadow-sm mb-4 border-info">
+          <div class="card-body">
+            <h4 class="card-title text-info">Nouvelles Features Créées</h4>
+            <p>{{ col }}</p>
+          </div>
+        </div>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    <!-- Étapes de transformation -->
+    {% if colonnes_transformees %}
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Étapes appliquées</h5>
+          <ol class="list-group list-group-numbered">
+            {% for step in colonnes_transformees %}
+              <li class="list-group-item">{{ step }}</li>
+            {% endfor %}
+          </ol>
+        </div>
+      </div>
+    {% endif %}
+
+    
+    {% if correlation_image %}
+      <h4 class="mt-4">Matrice de Corrélation :</h4>
+      <img src="{{ correlation_image }}" alt="Matrice de corrélation" class="img-fluid rounded shadow">
+    {% else %}
+      <p class="text-muted">Aucune matrice de corrélation disponible.</p>
+    {% endif %}
+
+
+
+
+    <!-- Bouton de téléchargement -->
+    <div class="text-center mb-4">
+      <a href="{% url 'telecharger_dataset_transforme' %}" class="btn btn-primary btn-lg">
+        <i class="bi bi-download"></i> Télécharger le Dataset Transformé
+      </a>
+
+      
+    </div>
+
+    <!-- Bouton retour -->
+    <div class="text-center">
+      <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Retour au Dashboard
+      </a>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.js"></script>
+</body>
+</html>

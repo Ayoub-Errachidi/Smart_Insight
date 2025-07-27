@@ -1,0 +1,354 @@
+/* Police Inter importée */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8f9fc;
+      color: #2c3e50;
+      margin: 0;
+      padding: 40px 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+#dataset-info {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+h1 {
+      font-weight: 700;
+      font-size: 2.8rem;
+      margin-bottom: 1.2rem;
+      letter-spacing: 0.04em;
+      color: #1a237e;
+      border-left: 6px solid #3949ab;
+      padding-left: 14px;
+    }
+
+.grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 28px;
+      background: #fff;
+      padding: 32px;
+      border-radius: 16px;
+      box-shadow: 0 12px 32px rgba(25, 42, 86, 0.12);
+    }
+
+.card {
+      border-radius: 15px;
+      padding: 24px 28px;
+      box-shadow: 0 4px 18px rgba(57, 73, 171, 0.18);
+      background-color: #e8eaf6;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: default;
+      color: #303f9f;
+    }
+
+.card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(57, 73, 171, 0.3);
+    }
+
+.card.green {
+      background: #f1f8e9;
+      box-shadow: 0 4px 18px rgba(132, 172, 71, 0.18);
+      color: #558b2f;
+    }
+
+.card.green:hover {
+      box-shadow: 0 10px 30px rgba(132, 172, 71, 0.3);
+    }
+
+.card.orange {
+      background: #fff3e0;
+      box-shadow: 0 4px 18px rgba(255, 167, 38, 0.18);
+      color: #ef6c00;
+    }
+
+.card.orange:hover {
+      box-shadow: 0 10px 30px rgba(255, 167, 38, 0.3);
+    }
+
+.card h4 {
+      font-weight: 700;
+      font-size: 1.25rem;
+      margin-bottom: 12px;
+      margin-top: 0px;    /* Empêche les sauts d’une ligne */
+    }
+
+.card p {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    /* Colonnes list card, pleine largeur */
+.card.columns-list {
+      grid-column: 1 / -1;
+      background: #f3e5f5;
+      box-shadow: 0 4px 24px rgba(126, 87, 194, 0.2);
+      color: #7e57c2;
+      padding: 28px 30px;
+    }
+
+.card.columns-list h4 {
+      font-size: 1.5rem;
+      margin-bottom: 18px;
+    }
+
+.columns-list .pill {
+      display: inline-block;
+      background: #ede7f6;
+      color: #4527a0;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 1rem;
+      box-shadow: 0 1px 4px rgba(69, 39, 160, 0.2);
+      margin: 0 10px 10px 0;
+      user-select: none;
+      transition: background-color 0.25s ease;
+      cursor: default;
+    }
+
+.columns-list .pill:hover {
+      background-color: #d1c4e9;
+    }
+
+    /* Responsive text scaling */
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2rem;
+    }
+    .card h4 {
+        font-size: 1.1rem;
+    }
+    .card p {
+        font-size: 1rem;
+    }
+}
+
+
+/* ------------ Design des lien href ------------ */
+/* Boutons pro & harmonisés */
+.action-buttons a {
+  display: inline-block;
+  margin: 10px 12px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.btn-primary {
+  background-color: #3949ab;
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #303f9f;
+  box-shadow: 0 4px 12px rgba(57, 73, 171, 0.3);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: #3949ab;
+  border: 2px solid #3949ab;
+}
+
+.btn-outline:hover {
+  background-color: #e8eaf6;
+  box-shadow: 0 4px 10px rgba(57, 73, 171, 0.15);
+}
+
+
+/* --------------- Tableau --------------- */
+.dataset-table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 16px;
+  border-radius: 8px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #aed581 #f8f9fc;
+}
+
+/* Tableau structuré & professionnel */
+.dataset-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.97rem;
+  color: #1b5e20;
+  background-color: transparent;
+  border-radius: 8px;
+  table-layout: auto;
+  min-width: 720px;
+}
+
+.dataset-table thead {
+  background-color: #dcedc8;
+}
+
+.dataset-table thead th {
+  padding: 14px 20px;
+  text-align: left;
+  font-weight: 700;
+  color: #2e7d32;
+  background-color: #dcedc8;
+  text-transform: uppercase;
+  border-bottom: 2px solid #aed581;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+}
+
+.dataset-table tbody td {
+  padding: 12px 20px;
+  font-weight: 500;
+  border-bottom: 1px solid #c5e1a5;
+  background-color: transparent;
+}
+
+.dataset-table tbody tr:nth-child(even) {
+  background-color: #f1f8e9;
+}
+
+.dataset-table tbody tr:hover {
+  background-color: #e6ee9c;
+  transition: background-color 0.2s ease;
+  cursor: default;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .dataset-table {
+    font-size: 0.85rem;
+  }
+
+  .dataset-table thead th,
+  .dataset-table tbody td {
+    padding: 10px 14px;
+  }
+}
+
+/* ---------- Scroll pro pour WebKit---------- */
+.dataset-table-container::-webkit-scrollbar {
+  height: 8px;
+}
+.dataset-table-container::-webkit-scrollbar-track {
+  background: #f8f9fc;
+  border-radius: 10px;
+}
+.dataset-table-container::-webkit-scrollbar-thumb {
+  background-color: #aed581;
+  border-radius: 10px;
+  border: 2px solid #f8f9fc;
+}
+.dataset-table-container::-webkit-scrollbar-thumb:hover {
+  background-color: #9ccc65;
+}
+
+
+/* ---------------------------- Missing value ---------------------------- */
+.missing-values-list {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 16px;
+  background-color: #f8f9fc; /* ✅ couleur de fond douce */
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(44, 62, 80, 0.06);
+  overflow: hidden;
+}
+
+.missing-values-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  font-size: 1rem;
+  font-weight: 500;
+  border-bottom: 1px solid #e0e0e0;
+  transition: background-color 0.2s ease;
+}
+
+.missing-values-list li:hover {
+  background-color: #edf1f9;
+}
+
+.missing-values-list li:last-child {
+  border-bottom: none;
+}
+
+.missing-value {
+  background-color: #fdecea;
+  color: #c62828;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.95rem;
+}
+
+.no-missing {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.95rem;
+}
+
+
+/* ------------------------- duplique lignes ------------------------- */
+/* Tableau responsive dans les sections duplications */
+.custom-table-container {
+  overflow-x: auto;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  padding: 16px;
+  margin-top: 10px;
+}
+
+/* Badges stylés */
+.tag {
+  display: inline-block;
+  padding: 6px 14px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 20px;
+  color: white;
+}
+
+.tag.info {
+  background-color: #42a5f5;
+}
+
+.tag.warning {
+  background-color: #ffb300;
+  color: #212121;
+}
+
+.tag.danger {
+  background-color: #e53935;
+}
+
+/* ----------- duplicated_rows_all_count == 0 ----------- */
+.no-duplicates-message {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border-left: 6px solid #66bb6a;
+  padding: 16px 20px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-top: 0px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 2px 6px rgba(76, 175, 80, 0.12);
+}

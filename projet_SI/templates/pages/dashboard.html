@@ -1,0 +1,43 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Importation CSV</title>
+    <link rel="stylesheet" href="{% static 'css/style_dashboard.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        <main class="main-content">
+            <div class="header">
+                <h1>Veuillez importer votre fichier</h1>
+                {% if error %}
+                    <p class="error-message">{{ error }}</p>
+                {% endif %}
+
+                <form method="POST" enctype="multipart/form-data" class="upload-form" onsubmit="showLoader()">
+                    {% csrf_token %}
+                    <input type="file" name="type_file" accept=".csv,.xlsx,.json" required>
+                    <button type="submit">Importer</button>
+                </form>
+
+                <div id="loader" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Importation en cours...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function showLoader() {
+            document.querySelector('.upload-form').style.display = 'none';
+            document.getElementById('loader').style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>

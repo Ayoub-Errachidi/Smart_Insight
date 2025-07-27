@@ -1,0 +1,102 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Corps de page */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f9;
+    color: #333;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Conteneur principal */
+.container {
+    background: white;
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 500px;
+}
+
+/* En-tête */
+.header h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #0056b3;
+    text-align: center;
+}
+
+/* Message d'erreur */
+.error-message {
+    color: #d8000c;
+    background-color: #ffdddd;
+    border-left: 5px solid #f44336;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+/* Formulaire */
+.upload-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.upload-form input[type="file"] {
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    background-color: #fafafa;
+    cursor: pointer;
+    transition: border 0.3s;
+}
+
+.upload-form input[type="file"]:hover {
+    border-color: #0056b3;
+}
+
+.upload-form button {
+    background-color: #0056b3;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.upload-form button:hover {
+    background-color: #004494;
+}
+
+
+/* CSS pour le spinner */
+#loader {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.spinner {
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #0056b3;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

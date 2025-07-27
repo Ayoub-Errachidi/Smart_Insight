@@ -1,0 +1,127 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Dataset</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <title>Dataset | Harmony Technology</title>
+</head>
+<body>
+
+  {% if data %}
+
+    <!-- Fichier importé -->
+    {% if filename %}
+      <div style="text-align: center;">
+        <h2 style="margin-bottom: 15px;">Dataset : {{ filename }}</h2>
+        <p style="margin: 0;"><strong>Format :</strong> {{ file_type }}</p>
+        <p style="margin: 0;"><strong>Dimensions :</strong> {{ lignes }} lignes × {{ columns }} colonnes</p> 
+        <p style="margin: 0;"><strong>Encodage détecté :</strong> {{ encoding }}</p>
+      </div>
+    {% endif %}
+
+    <!-- Tableau de Dataset -->
+    <div id="table-wrapper">
+      <div id="table-container">
+        {{ data|safe }}
+      </div>
+    </div>
+
+    <div class="pagination" id="pagination-controls"></div>   
+
+  
+  {% else %}
+    <p>Aucune donnée disponible.</p>
+  {% endif %}  
+
+  <!-- Bouton retour -->
+  <a href="{% url 'dashboard' %}" target="_blank">Retour au Dashboard</a>
+  <a href="{% url 'informations_dataset' %}" class="btn btn-primary mt-3">Voir les informations générales du dataset</a>
+  <a href="{% url 'supprimer_colonnes_page' %}" class="btn btn-warning btn-action">Supprimer des colonnes</a>
+
+  
+
+  <script>
+    const rowsPerPage = 10;
+    let currentPage = 1;
+    let table, rows;
+
+    window.onload = function () {
+      table = document.querySelector("table");
+      if (!table) return;
+      rows = table.querySelectorAll("tbody tr");
+      showPage(currentPage);
+    };
+
+    function showPage(page) {
+      const totalPages = Math.ceil(rows.length / rowsPerPage);
+      if (page < 1 || page > totalPages) return;
+
+      currentPage = page;
+      const start = (page - 1) * rowsPerPage;
+      const end = start + rowsPerPage;
+
+      rows.forEach((row, index) => {
+        row.style.display = (index >= start && index < end) ? "" : "none";
+      });
+
+      updatePaginationControls(totalPages);
+    }
+
+    function updatePaginationControls(totalPages) {
+      const pagination = document.getElementById("pagination-controls");
+      pagination.innerHTML = '';
+
+      const prevBtn = document.createElement("button");
+      prevBtn.textContent = "Précédent";
+      prevBtn.disabled = (currentPage === 1);
+      prevBtn.onclick = () => showPage(currentPage - 1);
+      pagination.appendChild(prevBtn);
+
+      const range = getPaginationRange(currentPage, totalPages);
+      range.forEach(p => {
+        if (p === '...') {
+          const span = document.createElement("span");
+          span.className = "ellipsis";
+          span.textContent = "...";
+          pagination.appendChild(span);
+        } else {
+          const btn = document.createElement("button");
+          btn.textContent = p;
+          if (p === currentPage) btn.classList.add("active");
+          btn.onclick = () => showPage(p);
+          pagination.appendChild(btn);
+        }
+      });
+
+      const nextBtn = document.createElement("button");
+      nextBtn.textContent = "Suivant";
+      nextBtn.disabled = (currentPage === totalPages);
+      nextBtn.onclick = () => showPage(currentPage + 1);
+      pagination.appendChild(nextBtn);
+    }
+
+    function getPaginationRange(current, total) {
+      const delta = 1;
+      const range = [];
+      const left = current - delta;
+      const right = current + delta;
+      let l;
+      for (let i = 1; i <= total; i++) {
+        if (i === 1 || i === total || (i >= left && i <= right)) {
+          if (l && i - l !== 1) {
+            range.push('...');
+          }
+          range.push(i);
+          l = i;
+        }
+      }
+      return range;
+    }
+  </script>
+    
+</body>
+</html>

@@ -1,0 +1,330 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="{% static 'css/style_infodata.css' %}">
+  <title>Informations sur le Dataset | Harmony Technology</title>
+</head>
+<body>
+
+  <!------------------ Informations sur le Dataset ------------------>
+  <div id="dataset-info">
+    <h1>Informations sur le Dataset</h1>
+    <p style="font-size: 1.1rem; color: #555; margin-bottom: 30px;">
+      Voici un aperçu global des informations structurées de votre dataset chargé
+    </p>
+
+    <div class="grid-container">
+      <!-- Forme des données -->
+      <section class="card" aria-label="Forme des données">
+        <h4>Forme des données</h4>
+        <p>{{ shape }}</p>
+      </section>
+
+      <!-- Nombre de lignes -->
+      <section class="card green" aria-label="Nombre de lignes">
+        <h4>Nombre de lignes</h4>
+        <p>{{ lignes }}</p>
+      </section>
+
+      <!-- Nombre de colonnes -->
+      <section class="card orange" aria-label="Nombre de colonnes">
+        <h4>Nombre de colonnes</h4>
+        <p>{{ colonnes }}</p>
+      </section>
+
+      <!-- Noms des colonnes -->
+      <section class="card columns-list" aria-label="Noms des colonnes">
+        <h4>Noms des colonnes</h4>
+        <div>
+          {% if columns %}
+            {% for col in columns %}
+              <span class="pill">{{ col }}</span>
+            {% endfor %}
+          {% else %}
+            <p>Aucune colonne détectée dans le dataset</p>
+          {% endif %}
+        </div>
+      </section>
+    </div>
+  </div>
+  <!------------------ Fin des informations ------------------>
+
+  <!------------------ Colonne Informations ------------------>
+  <!-- Colonnes par Type -->
+  <div id="dataset-info" style="margin-top: 40px;">
+    <h1 style="font-size: 2rem; color: #1a237e; margin-bottom: 20px;">Catégories des Colonnes</h1>
+    
+    <div class="grid-container">
+      
+      <!-- Colonnes Numériques -->
+      <section class="card green" aria-label="Colonnes numériques">
+        <h4>Colonnes Numériques <span style="font-weight: 500;">({{ num_columns }})</span></h4>
+        {% if numeric_colonne %}
+          <div style="margin-top: 12px;">
+            {% for col in numeric_colonne %}
+              <div style="margin-bottom: 8px;">
+                <span class="pill">{{ col }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p style="color: #c62828; font-weight: 500; margin-top: 12px;">Aucune colonne numérique détectée.</p>
+        {% endif %}
+      </section>
+
+      <!-- Colonnes Textuelles -->
+      <section class="card orange" aria-label="Colonnes textuelles">
+        <h4>Colonnes Textuelles <span style="font-weight: 500;">({{ text_columns }})</span></h4>
+        {% if text_colonne %}
+          <div style="margin-top: 12px;">
+            {% for col in text_colonne %}
+              <div style="margin-bottom: 8px;">
+                <span class="pill">{{ col }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p style="color: #c62828; font-weight: 500; margin-top: 12px;">Aucune colonne textuelle détectée.</p>
+        {% endif %}
+      </section>
+
+      <!-- Colonnes de Dates -->
+      <section class="card" style="background: #e1f5fe; color: #0277bd;" aria-label="Colonnes de dates">
+        <h4>Colonnes de Dates <span style="font-weight: 500;">({{ date_columns }})</span></h4>
+        {% if date_colonne %}
+          <div style="margin-top: 12px;">
+            {% for col in date_colonne %}
+              <div style="margin-bottom: 8px;">
+                <span class="pill" style="background: #b3e5fc; color: #01579b;">{{ col }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p style="color: #c62828; font-weight: 500; margin-top: 12px;">Aucune colonne date détectée.</p>
+        {% endif %}
+      </section>
+
+    </div>
+  </div>
+  <!------------------ Fin des informations ------------------>
+
+  <!------------------ Types de Données ------------------>
+  <div id="dataset-info">
+    <h1>Types de Données</h1>
+
+    <div class="grid-container">
+      <section class="card green" aria-label="Types de Données">
+        <div style="margin-bottom: 10px;">
+          <h4 style="margin-bottom: 6px;">Détail des colonnes par type</h4>
+          <p style="font-size: 1rem; font-weight: 500; color: #33691e;">
+            Ce tableau présente le nom de chaque colonne et son type de données détecté automatiquement.
+          </p>
+        </div>
+
+        <div class="dataset-table-container">
+          <table class="dataset-table">
+            <thead>
+              <tr>
+                <th style="width: 60%">Nom de la colonne</th>
+                <th style="width: 40%">Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for col, dtype in dtypes_data %}
+              <tr>
+                <td>{{ col }}</td>
+                <td>{{ dtype }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!------------------ Fin des informations ------------------>
+
+
+  <!------------------ Valeurs Manquantes ------------------>
+  <div id="dataset-info">
+    <h1>Valeurs Manquantes par Colonne</h1>
+    <div class="grid-container">
+      <section class="card" aria-label="Valeurs manquantes">
+          <h4 style="margin-bottom: 12px;">Valeurs Manquantes par Colonne</h4>
+
+          <p style="font-size: 1rem; font-weight: 500; margin-bottom: 8px;">
+            <strong>Colonnes avec au moins une valeur manquante :</strong>
+            <span style="color: #c62828;">{{ colonnes_avec_valeurs_nulles }}</span>
+          </p>
+
+          <p style="font-size: 1rem; font-weight: 500;">
+            <strong>Colonnes sans aucune valeur manquante :</strong>
+            <span style="color: #2e7d32;">{{ colonnes_sans_valeurs_nulles }}</span>
+          </p>
+
+          <hr style="margin: 20px 0; border: none; border-top: 1px solid #e0e0e0;" />
+
+          {% if null_values_list %}
+            <ul class="missing-values-list">
+              {% for col, count, percent in null_values_list %}
+                <li>
+                  <strong>{{ col }}</strong>
+                  {% if count > 0 %}
+                    <span class="missing-value">{{ count }} valeurs manquantes ({{ percent }}%)</span>
+                  {% else %}
+                    <span class="no-missing">aucune valeur manquante</span>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p>Aucune colonne détectée.</p>
+          {% endif %}
+
+        </section>
+      </div>
+    </div>
+  </div>
+
+  
+  {% if colonnes_avec_valeurs_nulles %}
+    <form action="{% url 'nettoyage' %}" method="get" style="text-align: center; margin-top: 40px;">
+      <button type="submit"
+              class="btn-primary"
+              style="display: inline-block; padding: 12px 24px; font-weight: 600; text-decoration: none; border-radius: 8px; font-size: 16px; transition: all 0.25s ease;">
+              Nettoyer les données
+      </button>
+    </form>
+  {% endif %}
+
+
+  <!------------------ Fin des informations ------------------>
+
+  <!------------------ Lignes Duplicées ------------------>
+  <!-- Lignes Duplicées -->
+  <div id="dataset-info">
+    <h1>Lignes Duplicées</h1>
+    
+    <div class="grid-container">
+      <section class="card green" aria-label="Types de Données">
+
+        {% if duplicated_non_consecutive_count > 0 %}
+          <p>
+            <strong>Doublons non consécutifs :</strong>
+            <span class="tag info">{{ duplicated_non_consecutive_count }}</span>
+          </p>
+          <div class="dataset-table-container">
+            <table class="dataset-table">
+              <thead>
+                <tr>
+                  {% for col in duplicated_non_consecutive.0.keys %}
+                    <th>{{ col }}</th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in duplicated_non_consecutive %}
+                  <tr>
+                    {% for val in row.values %}
+                      <td>{{ val }}</td>
+                    {% endfor %}
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% endif %}
+
+        {% if duplicated_rows_consecutive_count > 0 %}
+          <br>
+          <p>
+            <strong>Groupes de doublons consécutifs :</strong>
+            <span class="tag warning">{{ duplicated_rows_consecutive_count }} groupes - {{ total_lignes_doublons_consecutifs }} lignes</span>
+          </p>
+          
+          <div class="dataset-table-container">
+            <table class="dataset-table">
+              <thead>
+                <tr>
+                  {% for col in duplicated_rows_consecutive.0.keys %}
+                    <th>{{ col }}</th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in duplicated_rows_consecutive %}
+                  <tr>
+                    {% for val in row.values %}
+                      <td>{{ val }}</td>
+                    {% endfor %}
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% endif %}
+
+        {% if duplicated_rows_all_count > 0 %}
+          <br>
+          <p>
+            <strong>Nombre total de doublons :</strong>
+            <span class="tag danger">{{ duplicated_rows_all_count }}</span>
+          </p>
+          
+          <div class="dataset-table-container">
+            <table class="dataset-table">
+              <thead>
+                <tr>
+                  {% for col in duplicated_rows_all.0.keys %}
+                    <th>{{ col }}</th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in duplicated_rows_all %}
+                  <tr>
+                    {% for val in row.values %}
+                      <td>{{ val }}</td>
+                    {% endfor %}
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% endif %}
+
+        {% if duplicated_rows_all_count == 0 %}
+          <div class="no-duplicates-message">
+            <strong>Aucun doublon détecté :</strong>
+            <span>Le dataset ne contient aucune ligne dupliquée.</span>
+          </div>
+        {% endif %}
+
+      </section>
+    </div>
+
+    {% if duplicated_rows_all_count > 0 %}
+      <div class="action-buttons" style="text-align: center; margin-top: 40px;">
+        <a href="{% url 'supprimer_doublons' %}" target="_blank" class="btn-primary">Supprimer les Doublons</a>
+      </div>
+    {% endif %}
+
+  </div>
+  <!------------------ Fin des informations ------------------>
+
+
+  <!-- Boutons d'action -->
+  <div class="action-buttons" style="text-align: center; margin-top: 40px;">
+    <a href="{% url 'dashboard' %}" target="_blank" class="btn-primary">Retour au Dashboard</a>
+    <a href="{% url 'statistiques' %}" class="btn-outline">Voir les statistiques</a>
+    <a href="{% url 'download_dataset' %}" class="btn-primary">Télécharger le fichier nettoyé</a>
+    <a href="{% url 'dataset' %}" class="btn-outline">Voir Dataset</a>
+  </div>
+
+</body>
+</html>

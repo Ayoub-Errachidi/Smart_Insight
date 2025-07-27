@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Résultat - Suppression des Doublons</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9fafb;
+      color: #333;
+    }
+
+    header {
+      background: linear-gradient(90deg, #2c3e50, #3498db);
+      color: #fff;
+      padding: 20px 30px;
+      text-align: center;
+      font-size: 1.8rem;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    h1, h2, h3 {
+      color: #2c3e50;
+      margin-bottom: 15px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    ul li {
+      background: #f0f4f8;
+      margin-bottom: 10px;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .highlight {
+      color: #2e7d32;
+      font-weight: bold;
+    }
+
+    .deleted {
+      color: #c62828;
+      font-weight: bold;
+    }
+
+    .table-container {
+      margin-top: 20px;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+      font-size: 0.95rem;
+    }
+
+    table th, table td {
+      border: 1px solid #ddd;
+      padding: 8px 12px;
+      text-align: left;
+    }
+
+    table th {
+      background-color: #3498db;
+      color: #fff;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+    }
+
+    table tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+
+    .duplicate-group {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 25px;
+      background: #fdfdfd;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .action-buttons {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .btn-primary, .btn-outline {
+      display: inline-block;
+      margin: 5px;
+      padding: 10px 18px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: #2c80b4;
+    }
+
+    .btn-outline {
+      background-color: #fff;
+      color: #3498db;
+      border: 2px solid #3498db;
+    }
+
+    .btn-outline:hover {
+      background-color: #3498db;
+      color: #fff;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      margin-top: 30px;
+      background-color: #f1f3f6;
+      font-size: 0.9rem;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+     Résultat de la Suppression des Doublons
+  </header>
+
+  <main>
+    <h2>Résumé</h2>
+    <ul>
+      <li><strong>Lignes avant :</strong> <span class="highlight">{{ rows_before }}</span></li>
+      <li><strong>Lignes après :</strong> <span class="highlight">{{ rows_after }}</span></li>
+      <li><strong>Doublons supprimés :</strong> <span class="deleted">{{ duplicates_removed }}</span></li>
+      <li><strong>Index des doublons supprimés :</strong> {{ deleted_indices }}</li>
+      <li><strong>Doublons uniques supprimés :</strong> <span class="deleted">{{ nombre_doublons_uniques }}</span></li>
+      <li><strong>Index des doublons uniques supprimés :</strong> {{ unique_deleted_indices }}</li>
+    </ul>
+
+    <h3> Lignes supprimées (doublons) : </h3>
+    <div class="table-container">
+      {{ table_doublons_supprimes|safe }}
+    </div>
+
+    <h3> Détails des groupes de doublons : </h3>
+    {% for groupe in groupes_doublons %}
+    <div class="duplicate-group">
+      <p><strong> - Ligne conservée (index {{ groupe.ligne_conservee_index }}) :</strong></p>
+      <table>
+        <tr>
+          {% for key, value in groupe.ligne_conservee_data.items %}
+          <th>{{ key }}</th>
+          {% endfor %}
+        </tr>
+        <tr>
+          {% for key, value in groupe.ligne_conservee_data.items %}
+          <td>{{ value }}</td>
+          {% endfor %}
+        </tr>
+      </table>
+
+      <p><strong> - Lignes supprimées ({{ groupe.lignes_supprimees_index|join:", " }}) :</strong></p>
+      <table>
+        <tr>
+          {% for key in groupe.lignes_supprimees_data.0.keys %}
+          <th>{{ key }}</th>
+          {% endfor %}
+        </tr>
+        {% for row in groupe.lignes_supprimees_data %}
+          <tr>
+          {% for value in row.values %}
+            <td>{{ value }}</td>
+          {% endfor %}
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+    {% empty %}
+    <p>Aucun groupe de doublons trouvé.</p>
+    {% endfor %}
+
+    <div class="action-buttons">
+      <a href="{% url 'dashboard' %}" target="_blank" class="btn-primary">Retour au Dashboard</a>
+      <a href="{% url 'informations_dataset' %}" target="_blank" class="btn-outline">Informations sur Dataset</a>
+      <a href="{% url 'dataset' %}" class="btn-primary">Voir Dataset</a>
+    </div>
+  </main>
+
+  <footer>
+    © 2025 - Analyse des données | Harmony Technology
+  </footer>
+
+</body>
+</html>

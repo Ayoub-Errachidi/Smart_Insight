@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Résultat du Traitement des Outliers</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <style>
+        body { padding: 20px; font-family: Arial; }
+        .badge-stat { font-size: 1rem; }
+        .table-responsive { max-height: 500px; overflow-y: auto; }
+        pre.code { background: #f8f9fa; padding: 10px; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 class="text-primary mb-4">📉 Résultat du Traitement des Valeurs Aberrantes</h2>
+
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% else %}
+
+        {% if message_global %}
+            <div class="alert alert-warning">
+                <strong>⚠ Attention :</strong> {{ message_global }}
+            </div>
+        {% endif %}
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between">
+                        <strong>Lignes avant traitement</strong>
+                        <span class="badge bg-secondary badge-stat">{{ rows_before }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <strong>Lignes après traitement</strong>
+                        <span class="badge bg-success badge-stat">{{ rows_after }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <strong>Lignes supprimées</strong>
+                        <span class="badge bg-danger badge-stat">{{ rows_removed }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <strong>Colonnes conservées</strong>
+                        <span class="badge bg-info badge-stat">{{ cols_after }}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <h4 class="mt-4">📌 Méthodes Appliquées par Colonne</h4>
+        <ul class="list-group mb-4">
+            {% for col, methode in traitement_log %}
+                <li class="list-group-item">
+                    <strong>{{ col }}</strong> : {{ methode }}
+                </li>
+            {% empty %}
+                <li class="list-group-item text-muted">Aucune colonne numérique détectée.</li>
+            {% endfor %}
+        </ul>
+
+        {% if indices_supprimes %}
+        <h5 class="mt-4">🗑️ Indices des lignes supprimées</h5>
+        <pre class="code">{{ indices_supprimes }}</pre>
+        {% endif %}
+
+        
+        {% if table_outliers_removed %}
+        <h4 class="mt-4 text-danger">🗃️ Lignes supprimées (valeurs aberrantes)</h4>
+        <div class="table-responsive">
+            {{ table_outliers_removed|safe }}
+        </div>
+        {% endif %}
+
+        <div class="mt-4">
+            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary btn-custom">🏠 Retour Dashboard</a>
+            <a href="{% url 'informations_dataset' %}" class="btn btn-outline-info btn-custom">ℹ️ Infos Dataset</a>
+            <a href="{% url 'statistiques' %}" class="btn-outline">Voir les statistiques</a>
+            <a href="{% url 'dataset' %}" class="btn btn-primary btn-custom">📊 Voir Dataset</a>
+        </div>
+
+    {% endif %}
+</div>
+
+</body>
+</html>

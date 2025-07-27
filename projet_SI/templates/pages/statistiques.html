@@ -1,0 +1,162 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style_infodata.css' %}">
+    <title>Statistiques des Données | Harmony Technology</title>
+    <style>
+      /* Nouveau style pour isoler chaque tableau */
+      .table-card {
+        background: #fff;
+        padding: 20px 24px;
+        margin: 30px 0;
+        border-radius: 12px;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+      }
+      .table-card h4 {
+        margin-bottom: 16px;
+        color: #1a237e;
+        font-size: 1.4rem;
+      }
+    </style>
+</head>
+<body>
+
+    <div id="dataset-info">
+        <h1>Statistiques des Données Importées</h1>
+
+        {% if error %}
+            <div class="no-duplicates-message" style="background:#fdecea; color:#c62828; border-left:6px solid #ef5350;">
+                {{ error }}
+            </div>
+        {% else %}
+
+        <!-- -------------------- Statistiques de base -------------------- -->
+        <div class="table-card">
+            <h4>1. Statistiques descriptives (variables numériques)</h4>
+            {% if stats_base %}
+              <div class="dataset-table-container">
+                {{ stats_base|safe }}
+              </div>
+            {% else %}
+              <p>Aucune donnée numérique disponible.</p>
+            {% endif %}
+        </div>
+
+        <!-- -------------------- Statistiques avancées -------------------- -->
+        <div class="table-card">
+            <h4>2. Statistiques avancées</h4>
+            {% if stats_adv %}
+              <div class="dataset-table-container">
+                {{ stats_adv|safe }}
+              </div>
+            {% else %}
+              <p>Aucune statistique avancée calculée.</p>
+            {% endif %}
+        </div>
+
+        <!-- -------------------- Statistiques textuelles -------------------- -->
+        <div class="table-card">
+            <h4>3. Analyse des variables textuelles</h4>
+            {% if stats_text %}
+              <h4>3.1 Valeurs uniques</h4>
+              <div class="dataset-table-container">{{ stats_text.unique_values|safe }}</div>
+
+              <h4 class="mt-4">3.2 Fréquence des valeurs les plus courantes</h4>
+              <div class="dataset-table-container">{{ stats_text.top_values|safe }}</div>
+
+              <h4 class="mt-4">3.3 Nombre moyen de mots</h4>
+              <div class="dataset-table-container">{{ stats_text.avg_word_count|safe }}</div>
+            {% else %}
+              <p>Aucune colonne textuelle trouvée.</p>
+            {% endif %}
+        </div>
+
+        <!-- -------------------- Valeurs manquantes -------------------- -->
+        <div class="table-card">
+            <h4>4. Valeurs manquantes</h4>
+            {% if missing_values %}
+              <div class="dataset-table-container">
+                {{ missing_values|safe }}
+              </div>
+            {% else %}
+              <div class="no-duplicates-message">Aucune valeur manquante détectée.</div>
+            {% endif %}
+        </div>
+
+        <!-- -------------------- Valeurs aberrantes -------------------- -->
+        <div class="table-card">
+            <h4>5. Valeurs aberrantes (Outliers)</h4>
+            {% if outliers %}
+              <div class="dataset-table-container">
+                {{ outliers|safe }}
+              </div>
+              <div class="action-buttons" style="text-align: center; margin-top: 20px;">
+                <a href="{% url 'nettoyer_outliers' %}" class="btn-outline">Nettoyer les valeurs aberrantes</a>
+              </div>
+            {% else %}
+              <p>Aucune valeur aberrante détectée.</p>
+            {% endif %}
+        </div>
+
+        <!-- -------------------- PCA -------------------- -->
+        <div class="table-card">
+            <h4>6. Analyse en Composantes Principales (PCA)</h4>
+            {% if pca_html %}
+              <div class="dataset-table-container">
+                {{ pca_html|safe }}
+              </div>
+            {% else %}
+              <p>Aucune analyse PCA disponible.</p>
+            {% endif %}
+        </div>
+
+        <!-- Matrice de corrélation -->
+        <div class="table-card">
+            <h4>Matrice de corrélation</h4>
+            <div class="dataset-table-container">
+              {{ correlation_matrix|safe }}
+            </div>
+        </div>
+
+        <!-- Détection de la multicolinéarité -->
+        <div class="table-card">
+            <h4>Multicolinéarité</h4>
+            {% if multicollinear_pairs %}
+              <ul class="missing-values-list">
+                {% for var1, var2, val in multicollinear_pairs %}
+                  <li><strong>{{ var1 }}</strong> et <strong>{{ var2 }}</strong> : corrélation {{ val }}</li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <div class="no-duplicates-message">
+                Aucune corrélation forte détectée entre les variables numériques (seuil ≥ 0.9).
+              </div>
+            {% endif %}
+        </div>
+
+        {% endif %}
+    </div>
+
+    <!-- Boutons d'action -->
+    <div class="action-buttons" style="text-align: center; margin-top: 40px;">
+      <a href="{% url 'informations_dataset' %}" class="btn-primary">Informations générales du dataset</a>
+      <a href="{% url 'download_dataset' %}" class="btn-outline">Télécharger le fichier nettoyé</a>
+      <a href="{% url 'choix_cible' %}" class="btn-primary">Choisir la Target</a>
+      <a href="{% url 'dataset' %}" class="btn-outline">Voir le Dataset</a>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const tables = document.querySelectorAll("table");
+        tables.forEach(table => {
+          table.classList.add("dataset-table");
+        });
+      });
+    </script>
+
+</body>
+</html>
