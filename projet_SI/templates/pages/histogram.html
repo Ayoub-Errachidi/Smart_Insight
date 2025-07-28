@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --primary-color: #007bff;
+      --bg-light: #f4f4f4;
+      --bg-white: #ffffff;
+      --text-dark: #333;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --primary-color: #66b0ff;
+        --bg-light: #1e1e1e;
+        --bg-white: #2c2c2c;
+        --text-dark: #f0f0f0;
+      }
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: var(--bg-light);
+      padding: 40px;
+      text-align: center;
+      color: var(--text-dark);
+      margin: 0;
+    }
+
+    h1 {
+      color: var(--text-dark);
+      margin-bottom: 30px;
+    }
+
+    .plot-container {
+      background-color: var(--bg-white);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      max-width: 1000px;
+      margin: 40px auto;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+    }
+
+    .explanations {
+      text-align: left;
+      margin-top: 40px;
+    }
+
+    .explanations h2 {
+      color: var(--text-dark);
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--primary-color);
+      padding-bottom: 10px;
+    }
+
+    .explanation-item {
+      margin-bottom: 30px;
+      padding: 20px;
+      background: linear-gradient(145deg, var(--bg-white), var(--bg-light));
+      border-left: 5px solid var(--primary-color);
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease-in-out;
+    }
+    .explanation-item:hover {
+      transform: scale(1.01);
+    }
+
+    .explanation-item h3 {
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+
+    .explanation-item p {
+      margin: 0;
+      color: var(--text-dark);
+      font-size: 15px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 30px;
+      text-decoration: none;
+      color: white;
+      background-color: var(--primary-color);
+      padding: 12px 20px;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #0056b3;
+    }
+
+    .btn-download {
+      background-color: #28a745;
+      margin-left: 15px;
+    }
+
+    .btn-download:hover {
+      background-color: #218838;
+    }
+
+    footer {
+      margin-top: 60px;
+      font-size: 13px;
+      color: #aaa;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 20px;
+      }
+      .plot-container {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+    <h1>{{ title }}</h1>
+
+    {% if plot_images %}
+        {% for item in plot_images %}
+            <div class="plot-container">
+                <h3>{{ item.col_name }}</h3>
+                <img src="data:image/png;base64,{{ item.image }}" class="img-fluid" id="plotImage-{{ forloop.counter }}">
+              
+                <button class="btn btn-download" 
+                        data-img-id="plotImage-{{ forloop.counter }}" 
+                        data-filename="histogram_{{ item.col_name|slugify }}.png">
+                    Télécharger
+                </button>
+
+            </div>
+        {% endfor %}
+
+    {% elif plot_image %}
+        <div class="plot-container">
+            <img src="data:image/png;base64,{{ plot_image }}" class="img-fluid" id="plotImage">
+            
+            <button class="btn btn-download" 
+                    data-img-id="plotImage" 
+                    data-filename="Plot.png">
+                Télécharger
+            </button>
+
+        </div>
+
+    {% else %}
+        <p>Aucun graphique généré.</p>
+    {% endif %}
+
+
+    <a class="btn" href="{% url 'visualisations' %}">← Retour aux visualisations</a>
+
+    <footer>
+        &copy; {{ year|default:"2025" }} - Visualisation de données par IA
+    </footer>
+  
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        // Fonction de téléchargement de l'image
+        document.querySelectorAll('.btn-download').forEach(button => {
+            button.addEventListener('click', function () {
+            const imgId = this.getAttribute('data-img-id');
+            const filename = this.getAttribute('data-filename') || 'download.png';
+            const img = document.getElementById(imgId);
+    
+            if (img && img.src.startsWith('data:image')) {
+                const link = document.createElement('a');
+                link.href = img.src;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                alert("Image non trouvée ou format incorrect.");
+            }
+            });
+        });
+        
+        });
+    </script>
+
+</body>
+</html>

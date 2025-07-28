@@ -1,5 +1,5 @@
 from django.urls import path
-from projet_SI.views import views_importation, data_cleaning, data_informations, data_statistiques, data_preprocessing, model_training
+from projet_SI.views import views_importation, data_cleaning, data_informations, data_statistiques, data_visualisations,data_preprocessing
 
 urlpatterns = [
     # Page d'accueil (redirection vers dashboard)
@@ -16,6 +16,17 @@ urlpatterns = [
 
     # Statistiques descriptives du dataset
     path('statistiques/', data_statistiques.statistique_view, name='statistiques'),
+
+
+    # 📉 Choix du type de visualisation
+    path('visualisations/', data_visualisations.visualisations_view, name='visualisations'),
+    
+    # 🖼️ Génération de graphiques dynamiques (plot_type : histogram, box, scatter ...)
+    path('select_pairplot/', data_visualisations.select_pairplot_columns_view, name='select_pairplot_columns_view'),
+    path('generate_plot/<str:plot_type>/', data_visualisations.plot_result_view, name='generate_plot'),
+
+
+
 
     # Nettoyage des données
     path('nettoyage/', data_cleaning.nettoyer_dataset_view, name='nettoyage'),
