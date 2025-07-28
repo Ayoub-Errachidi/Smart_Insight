@@ -42,6 +42,7 @@ def validate_uploaded_file(file) -> None:
     if not file.name.endswith(SUPPORTED_EXTENSIONS):
         raise ValidationError("Format non supporté. Veuillez importer un fichier CSV, Excel ou JSON.")
 
+# -------------------- Clean Data --------------------
 def standardize_missing_values(df: pd.DataFrame) -> pd.DataFrame:
     """
     Remplace les chaînes considérées comme nulles par des NaN réels.
@@ -62,6 +63,47 @@ def standardize_column_names(df: pd.DataFrame) -> pd.DataFrame:
         return name
 
     df.columns = [to_snake_case(col) for col in df.columns]
+    return df
+
+# -------------------- Normalisation des mots --------------------
+import unicodedata
+
+def normalize_word_variants(value: str) -> str:
+    """
+    Corrige les variantes d'un mot :
+    - supprime les accents
+    - met en minuscules
+    """
+    if not isinstance(value, str):
+        return value
+    
+    # Supprimer les accents
+    value = unicodedata.normalize('NFKD', value)
+    value = ''.join(c for c in value if not unicodedata.combining(c))
+    
+    return value.lower().strip()
+
+def uniformize_categories(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Met toutes les valeurs textuelles (catégorielles) en minuscules
+    et applique normalize_word_variants.
+    """
+    for col in df.select_dtypes(include=['object', 'category']).columns:
+        df[col] = df[col].astype(str).apply(normalize_word_variants)
+    return df
+
+# -------------------- Pipeline de nettoyage --------------------
+
+def clean_dataset(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Pipeline de nettoyage global :
+    1. Standardiser valeurs manquantes
+    2. Normaliser les noms de colonnes
+    3. Uniformiser les catégories
+    """
+    df = standardize_missing_values(df)
+    df = standardize_column_names(df)
+    df = uniformize_categories(df)
     return df
 
 # -------------------- Helpers encodage --------------------
@@ -109,8 +151,12 @@ def parse_uploaded_file(file) -> pd.DataFrame:
             raise ValidationError("Type de fichier non supporté.")
         
         # Nettoyage commun à tous les formats
-        df = standardize_missing_values(df)
-        df = standardize_column_names(df)
+        #df = standardize_missing_values(df)
+        #df = standardize_column_names(df)
+
+        #df = uniformize_categories(df)
+
+        df = clean_dataset(df)
 
         return df, encoding_used
     
@@ -205,3 +251,4 @@ def dataset_view(request: HttpRequest) -> HttpResponse:
     except Exception:
         logger.exception("Erreur interne : dataset_view")
         return render(request, "pages/Dataset.html", {"error": "Erreur interne lors du chargement du dataset."})
+    
